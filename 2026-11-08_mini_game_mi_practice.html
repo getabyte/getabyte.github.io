@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>動機式晤談實戰：勸家人動起來！</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Noto Sans TC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans TC"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            warm: {
+              50: '#FDFBF7',
+              100: '#F7F3EB',
+              200: '#ECE3D4',
+              500: '#D97706',
+              600: '#B45309',
+              800: '#78350F',
+              900: '#451A03',
+            },
+            sage: {
+              500: '#10B981',
+              600: '#059669',
+            }
+          },
+          keyframes: {
+            popIn: {
+              '0%': { transform: 'scale(0.9)', opacity: '0' },
+              '100%': { transform: 'scale(1)', opacity: '1' },
+            },
+            pulseSubtle: {
+              '0%, 100%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.03)' },
+            }
+          },
+          animation: {
+            pop: 'popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            pulseSubtle: 'pulseSubtle 2s infinite ease-in-out',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* 避免 LINE 瀏覽器雙擊放大、選取與拖拉溢出 */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #F7F3EB;
+      touch-action: manipulation;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-warm-100 text-stone-800 min-h-screen flex flex-col justify-between font-sans antialiased overflow-x-hidden">
+
+  <!-- 頂部狀態列 -->
+  <header class="sticky top-0 z-20 bg-warm-100/90 backdrop-blur-md border-b border-warm-200 px-4 py-3">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🏃</span>
+        <h1 class="text-sm font-bold tracking-tight text-stone-700">MI 溝通冒險：勸家人動起來</h1>
+      </div>
+      <div id="stage-badge" class="hidden px-2.5 py-0.5 text-xs font-bold rounded-full bg-amber-100 text-amber-800 border border-amber-300">
+        關卡 1/5
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要互動視窗（容器限制為手機尺寸） -->
+  <main class="flex-1 w-full max-w-md mx-auto px-4 py-4 flex flex-col justify-center items-center relative">
+    
+    <!-- 1. 開始遊戲畫面 -->
+    <section id="screen-intro" class="w-full bg-white rounded-3xl p-6 shadow-xl border border-warm-200 flex flex-col items-center text-center animate-pop">
+      <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center text-4xl mb-4 shadow-inner animate-pulseSubtle">
+        🛋️
+      </div>
+      <span class="text-xs uppercase tracking-widest font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full mb-3 border border-amber-200">
+        Motivational Interviewing
+      </span>
+      <h2 class="text-2xl font-black text-stone-800 mb-2 leading-snug">
+        沙發馬鈴薯大拯救！
+      </h2>
+      <p class="text-sm text-stone-600 mb-6 leading-relaxed text-justify px-2">
+        家人下班後整天癱在沙發上，健檢亮紅字卻怎麼勸都不動？<br>
+        講大道理只會被翻白眼？運用國際著名的心理學技巧——<b>動機式晤談（MI）</b>，解鎖對方的內在改變力量！
+      </p>
+
+      <div class="w-full bg-warm-50 rounded-2xl p-4 mb-6 border border-warm-200 text-left text-xs space-y-2 text-stone-600">
+        <div class="flex items-center gap-2 font-bold text-stone-800">
+          <span>🎯</span> 你的任務：
+        </div>
+        <div class="flex items-start gap-1.5">
+          <span class="text-emerald-600 font-bold">✔</span>
+          <span><b>放下「修正反射」</b>：克制說教、批判與給標準答案。</span>
+        </div>
+        <div class="flex items-start gap-1.5">
+          <span class="text-emerald-600 font-bold">✔</span>
+          <span><b>傾聽與喚起動機</b>：讓家人親口說出改變的理由！</span>
+        </div>
+      </div>
+
+      <button id="btn-start" class="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold rounded-2xl shadow-lg shadow-amber-500/30 transition-all duration-200 active:scale-95 text-base flex items-center justify-center gap-2">
+        <span>開始對話試煉</span>
+        <span>👉</span>
+      </button>
+    </section>
+
+    <!-- 2. 遊戲進行主畫面 -->
+    <section id="screen-game" class="w-full hidden flex-col gap-4">
+      
+      <!-- 數值量表面板 -->
+      <div class="bg-white/80 backdrop-blur rounded-2xl p-3.5 shadow-sm border border-warm-200 flex flex-col gap-2.5">
+        <!-- 心防值 -->
+        <div>
+          <div class="flex justify-between text-xs font-bold mb-1">
+            <span class="text-stone-600 flex items-center gap-1">🛡️ 心防值 (Resistance)</span>
+            <span id="defense-val-text" class="text-red-500 font-mono">85%</span>
+          </div>
+          <div class="w-full h-2.5 bg-stone-100 rounded-full overflow-hidden">
+            <div id="defense-bar" class="h-full bg-red-400 rounded-full transition-all duration-500" style="width: 85%;"></div>
+          </div>
+        </div>
+        <!-- 改變動機 -->
+        <div>
+          <div class="flex justify-between text-xs font-bold mb-1">
+            <span class="text-stone-600 flex items-center gap-1">🔥 改變動機 (Motivation)</span>
+            <span id="motivation-val-text" class="text-emerald-600 font-mono">15%</span>
+          </div>
+          <div class="w-full h-2.5 bg-stone-100 rounded-full overflow-hidden">
+            <div id="motivation-bar" class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: 15%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 對話場景卡片 -->
+      <div class="w-full bg-white rounded-3xl p-5 shadow-lg border border-warm-200 relative overflow-hidden flex flex-col gap-4">
+        
+        <!-- 角色狀態頭像與名稱 -->
+        <div class="flex items-center gap-3.5">
+          <div id="avatar-box" class="w-14 h-14 rounded-2xl bg-amber-50 border-2 border-amber-200 flex items-center justify-center text-3xl shadow-sm transition-all duration-300">
+            😫
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-stone-800 text-base">癱在沙發的家人</span>
+              <span id="status-tag" class="text-[11px] px-2 py-0.5 rounded-full font-bold bg-stone-100 text-stone-500">
+                極度防備
+              </span>
+            </div>
+            <div id="sub-stage-label" class="text-xs text-amber-700 font-medium mt-0.5">
+              階段 1：建立關係 (Engaging)
+            </div>
+          </div>
+        </div>
+
+        <!-- 家人的話 (對話氣泡) -->
+        <div class="relative bg-amber-50/70 border border-amber-200/80 rounded-2xl p-4 text-stone-800 text-sm leading-relaxed">
+          <div class="absolute -top-2 left-6 w-3 h-3 bg-amber-50 border-t border-l border-amber-200/80 rotate-45"></div>
+          <p id="character-dialogue" class="font-medium text-stone-800">
+            「今天在公司快被榨乾了，每天加班累都累死，回家只想躺著放空，哪來的力氣去運動啊？」
+          </p>
+        </div>
+
+        <!-- 玩家選項提示 -->
+        <div class="text-xs font-bold text-stone-400 uppercase tracking-wider flex items-center gap-1.5 mt-1">
+          <span>💬</span> 選擇你的回應方式：
+        </div>
+
+        <!-- 4 個選項按鈕列表 -->
+        <div id="options-container" class="flex flex-col gap-2.5">
+          <!-- 動態生成選項 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 結果反饋彈窗 (Modal) -->
+    <div id="feedback-modal" class="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm hidden items-end sm:items-center justify-center p-4">
+      <div class="w-full max-w-md bg-white rounded-3xl p-5 shadow-2xl border border-warm-200 flex flex-col gap-4 animate-pop max-h-[90vh] overflow-y-auto custom-scrollbar">
+        
+        <!-- 狀態標頭 -->
+        <div class="flex items-center justify-between pb-3 border-b border-stone-100">
+          <div id="modal-badge" class="flex items-center gap-2 text-sm font-black text-emerald-600">
+            <span class="text-xl">✨</span>
+            <span id="modal-result-title">回應精準！直擊內心</span>
+          </div>
+          <span id="modal-score-impact" class="text-xs font-bold px-2 py-1 rounded bg-stone-100 text-stone-600">
+            動機 +20%
+          </span>
+        </div>
+
+        <!-- 家人的內心 OS -->
+        <div class="bg-stone-50 rounded-2xl p-3.5 border border-stone-200">
+          <span class="text-[11px] font-bold text-stone-400 block mb-1">💭 家人的內心小劇場：</span>
+          <p id="modal-inner-thought" class="text-xs text-stone-700 italic">
+            「本來以為又要被碎碎念了，沒想到他真的懂我現在有多累，心裡舒服多了...」
+          </p>
+        </div>
+
+        <!-- 動機式晤談 (MI) 專業教練解析 -->
+        <div class="space-y-1.5">
+          <div class="flex items-center gap-1.5 text-xs font-bold text-amber-800">
+            <span>💡</span>
+            <span>動機式晤談（MI）教練解析：</span>
+          </div>
+          <div id="modal-coach-explanation" class="text-xs text-stone-600 leading-relaxed bg-amber-50/60 p-3 rounded-xl border border-amber-200/60">
+            這裡呈現具體的 OARS 解析...
+          </div>
+        </div>
+
+        <!-- 操作按鈕 -->
+        <div class="pt-2 flex gap-3">
+          <button id="modal-btn-retry" class="hidden flex-1 py-3 bg-stone-100 hover:bg-stone-200 text-stone-700 text-sm font-bold rounded-xl transition-all">
+            再換句話說
+          </button>
+          <button id="modal-btn-next" class="flex-1 py-3.5 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white text-sm font-bold rounded-xl shadow-md shadow-amber-500/20 transition-all flex items-center justify-center gap-1.5">
+            <span id="modal-next-btn-text">繼續推進對話</span>
+            <span>👉</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 結算畫面 (Ending Screen) -->
+    <section id="screen-ending" class="w-full hidden bg-white rounded-3xl p-6 shadow-xl border border-warm-200 flex-col items-center text-center animate-pop">
+      <div id="ending-icon" class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center text-4xl mb-3 shadow-inner">
+        🏆
+      </div>
+      
+      <span class="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full mb-2 border border-amber-200">
+        最終結算評定
+      </span>
+      <h2 id="ending-title" class="text-2xl font-black text-stone-800 mb-1">
+        心靈捕手級引導師
+      </h2>
+      <p id="ending-desc" class="text-xs text-stone-600 mb-5 leading-relaxed px-2">
+        你成功放下了指責與說教的本能，陪伴家人走出抗拒與自我懷疑，邁出自發性的第一步！
+      </p>
+
+      <!-- 最終數值卡片 -->
+      <div class="w-full grid grid-cols-2 gap-3 mb-5">
+        <div class="bg-warm-50 p-3 rounded-2xl border border-warm-200 text-center">
+          <span class="text-[11px] font-bold text-stone-500 block mb-0.5">最終心防值</span>
+          <span id="ending-defense" class="text-xl font-black text-stone-700">10%</span>
+          <span class="text-[10px] text-emerald-600 block">大幅瓦解抗拒</span>
+        </div>
+        <div class="bg-warm-50 p-3 rounded-2xl border border-warm-200 text-center">
+          <span class="text-[11px] font-bold text-stone-500 block mb-0.5">最終動機值</span>
+          <span id="ending-motivation" class="text-xl font-black text-emerald-600">95%</span>
+          <span class="text-[10px] text-emerald-600 block">自發邁出行動</span>
+        </div>
+      </div>
+
+      <!-- MI 核心金句卡片 -->
+      <div class="w-full bg-amber-50/70 rounded-2xl p-4 mb-6 border border-amber-200 text-left">
+        <div class="text-xs font-bold text-amber-900 mb-1 flex items-center gap-1.5">
+          <span>📜</span> 動機式晤談精華金句：
+        </div>
+        <p class="text-xs text-stone-700 leading-relaxed italic">
+          「誰說出改變的理由，誰就更有可能改變。當你克制了說教的衝動，對方的改變動力才會真正誕生。」
+        </p>
+      </div>
+
+      <!-- 分享與重玩按鈕 -->
+      <div class="w-full flex flex-col gap-2.5">
+        <button id="btn-copy-share" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/30 transition-all active:scale-95 text-sm flex items-center justify-center gap-2">
+          <span>📋</span>
+          <span>複製戰績與遊戲連結分享到 LINE</span>
+        </button>
+        <button id="btn-restart" class="w-full py-3 bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold rounded-2xl transition-all text-sm">
+          再玩一次
+        </button>
+      </div>
+
+      <!-- 提示訊息 Toast -->
+      <div id="toast" class="fixed bottom-6 bg-stone-900 text-white text-xs px-4 py-2.5 rounded-full shadow-2xl opacity-0 transition-opacity duration-300 pointer-events-none">
+        已複製分享內容到剪貼簿！快傳給朋友試試！
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 底部微標籤 -->
+  <footer class="py-3 text-center text-[11px] text-stone-400">
+    基於 Motivational Interviewing (MI) 心理學理念設計
+  </footer>
+
+  <!-- 遊戲邏輯腳本 -->
+  <script>
+    // 題庫資料：五道連續情境題
+    const stages = [
+      {
+        id: 1,
+        title: "階段 1：建立關係 (Engaging)",
+        dialogue: "「今天在公司快被榨乾了，每天加班累都累死，回家只想躺著放空，哪來的力氣去運動啊？」",
+        avatar: "😫",
+        status: "滿臉疲憊、強烈抗拒",
+        options: [
+          {
+            id: 'A',
+            text: "「你就是都不運動，血液循環差才會越坐越累。動一動流點汗，精神反而會變好。」",
+            isCorrect: false,
+            defenseDelta: +10,
+            motivationDelta: -5,
+            innerThought: "「又是這種大道理！我整天在公司被主管唸，回家還要被你教訓，煩死了！」",
+            explanation: "<b>【踩中修正反射（Righting Reflex）】</b><br>直接用理性說教否定對方的疲憊感，只會引發「心理抗拒」，讓對方更想窩在沙發以捍衛自主感。"
+          },
+          {
+            id: 'B',
+            text: "「聽起來今天工作真的消耗很大，回到家整個人都空了，現在最需要的就是徹底放空、不被打擾。」",
+            isCorrect: true,
+            defenseDelta: -25,
+            motivationDelta: +10,
+            innerThought: "「呼……終於有人懂我有多累了。他沒有逼我，感覺放鬆了一點。」",
+            explanation: "<b>【運用反映式傾聽（Reflective Listening）】</b><br>準確接住對方的疲憊與情緒，展現 PACE 原則中的「接納與夥伴關係」，先建立信任與安全感。"
+          },
+          {
+            id: 'C',
+            text: "「其實去公園慢走 15 分鐘花不了什麼力氣，走吧！我陪你去，走完你一定會感謝我。」",
+            isCorrect: false,
+            defenseDelta: +5,
+            motivationDelta: 0,
+            innerThought: "「你覺得輕鬆我覺得很難啊！不要強迫我好不好……」",
+            explanation: "<b>【過早給予解決方案】</b><br>越過理解階段直接拉人行動，剝奪了對方的自主選擇權，常招致消極拒絕。"
+          },
+          {
+            id: 'D',
+            text: "「隔壁老王每天加班還不是照樣去跑步，這根本是意志力和自律的問題。」",
+            isCorrect: false,
+            defenseDelta: +15,
+            motivationDelta: -10,
+            innerThought: "「那你去找老王過啊！比什麼比，爛透了。」",
+            explanation: "<b>【比較與道德批判】</b><br>引發羞恥感與逆反心理，是破壞溝通關係的最快方式。"
+          }
+        ]
+      },
+      {
+        id: 2,
+        title: "階段 2：聚焦目標 (Focusing)",
+        dialogue: "「唉……我也知道一直躺著不太好，最近早上起床全身骨頭都在痛，健檢紅字也變多了，但下班真的就是沒電啊。」",
+        avatar: "🥺",
+        status: "內心矛盾、動搖中",
+        options: [
+          {
+            id: 'A',
+            text: "「雖然下班真的很累，但你也注意到身體正在發出警訊，心裡其實滿希望能舒服、有精神一點，是嗎？」",
+            isCorrect: true,
+            defenseDelta: -20,
+            motivationDelta: +20,
+            innerThought: "「對啊……我真的不想每天早上起床都那麼痛苦，其實我也很在乎自己身體。」",
+            explanation: "<b>【反映矛盾心態（Ambivalence）】</b><br>家人此時同時說出了維持現狀的理由（累）與想改變的理由（痛、紅字）。你精準點出他的深層期待，引導他聚焦在健康價值上。"
+          },
+          {
+            id: 'B',
+            text: "「既然你都知道健檢有紅字了，事不宜遲，明天開始我們每天早上提早半小時晨跑！」",
+            isCorrect: false,
+            defenseDelta: +15,
+            motivationDelta: -5,
+            innerThought: "「晨跑？！起都起不來了還晨跑，當我沒說過好了……」",
+            explanation: "<b>【過度躁進】</b><br>對方才剛露出一點改變苗頭，就強加高難度任務，直接把剛剛萌芽的動機嚇退。"
+          },
+          {
+            id: 'C',
+            text: "「紅字是哪幾項？嚴重的話以後心血管疾病機率會暴增，現在不重視，過幾年就來不及了！」",
+            isCorrect: false,
+            defenseDelta: +10,
+            motivationDelta: -5,
+            innerThought: "「不要一直嚇我好不好，生活壓力已經夠大了，更想逃避了。」",
+            explanation: "<b>【恐懼訴求（Fear Appeal）】</b><br>研究指出，對缺乏自信者使用恐嚇與嚴重後果威脅，往往只會促成逃避行為。"
+          },
+          {
+            id: 'D',
+            text: "「好啦，既然下班沒電就不要勉強，健檢紅字大家多多少少都有，別想太多繼續躺著吧。」",
+            isCorrect: false,
+            defenseDelta: 0,
+            motivationDelta: -10,
+            innerThought: "「嗯……也是啦，反正大家都有紅字，那就這樣吧。」",
+            explanation: "<b>【消極共謀】</b><br>完全放棄聚焦改變目標，讓對話沉淪回維持現狀。"
+          }
+        ]
+      },
+      {
+        id: 3,
+        title: "階段 3：喚起動機 - 重要性 (Evoking)",
+        dialogue: "「是啊，以前念書時常去打球、爬山，整天都很有活力。現在才幾歲就動不動腰酸背痛，有時候真的挺想念以前那個有精神的自己。」",
+        avatar: "✨",
+        status: "陷入回憶、眼神有光",
+        options: [
+          {
+            id: 'A',
+            text: "「想當初你體態多好，現在肚子都跑出來了，再不練真的不行啦。」",
+            isCorrect: false,
+            defenseDelta: +15,
+            motivationDelta: -5,
+            innerThought: "「哪壺不開提哪壺，非要諷刺我的身材不可嗎？」",
+            explanation: "<b>【身材羞辱破壞氛圍】</b><br>在對方展現脆弱懷念時予以批判，瞬間破壞了情感連結。"
+          },
+          {
+            id: 'B',
+            text: "「光想念沒有用，以前是以前，現在是現在，重點是拿出執行力行動起來。」",
+            isCorrect: false,
+            defenseDelta: +10,
+            motivationDelta: -5,
+            innerThought: "「我只是感慨一下，又要被你當學生訓話，真討厭。」",
+            explanation: "<b>【說教教訓】</b><br>缺乏同理心的激勵只是廉價口號，切斷了對方正在醞釀的內在動力。"
+          },
+          {
+            id: 'C',
+            text: "「那時候活力充沛、精神飽滿的狀態，如果能帶回你現在的生活裡，你覺得最大的差別會是什麼？」",
+            isCorrect: true,
+            defenseDelta: -20,
+            motivationDelta: +25,
+            innerThought: "「最大的差別……可能假日不會整天昏睡，能有體力好好陪家人、出門玩吧，那種感覺真好。」",
+            explanation: "<b>【喚起性開放提問（Evoking Open Question）】</b><br>極佳的提問！引導對方主動親口描繪改變後的生活藍圖。由他自己說出渴望，行動力量最強大。"
+          },
+          {
+            id: 'D',
+            text: "「既然你想念打球，這週末我幫你約以前的球友去打全場籃球，找回熱血！」",
+            isCorrect: false,
+            defenseDelta: +5,
+            motivationDelta: 0,
+            innerThought: "「全場籃球？我現在跑兩步膝蓋就爆了吧，太誇張了。」",
+            explanation: "<b>【忽視現狀能力】</b><br>越俎代庖安排高強度運動，容易引起挫敗感與退縮。"
+          }
+        ]
+      },
+      {
+        id: 4,
+        title: "階段 4：喚起動機 - 信心 (Confidence)",
+        dialogue: "「如果能每天早上起床不那麼沉重就好了。可是我現在的生活節奏，要像以前那樣每週固定去健身房或球場運動一兩個小時，根本不可能做到。」",
+        avatar: "🤔",
+        status: "想做但沒信心、怕麻煩",
+        options: [
+          {
+            id: 'A',
+            text: "「時間就像海綿裡的水，擠一擠就有了，少滑一小時手機、少看兩部劇不就有時間了嗎？」",
+            isCorrect: false,
+            defenseDelta: +10,
+            motivationDelta: -5,
+            innerThought: "「我連下班放鬆滑手機都要被你指手畫腳，好累……」",
+            explanation: "<b>【指責時間管理】</b><br>否定對方的休閒必要性，會讓對方進入自衛反駁模式。"
+          },
+          {
+            id: 'B',
+            text: "「如果完全不壓縮你下班放鬆的時間，哪怕只有 5 到 10 分鐘，你覺得哪種活動最不讓你感到負擔？」",
+            isCorrect: true,
+            defenseDelta: -15,
+            motivationDelta: +20,
+            innerThought: "「咦？只要 5 到 10 分鐘嗎？不用去健身房換衣服的話，好像沒那麼難耶。」",
+            explanation: "<b>【拆解門檻、賦予自主權（Autonomy Support）】</b><br>打破「運動必須 1~2 小時」的完美主義迷思，將行動縮小到無痛門檻，激發自我效能感（Self-efficacy）。"
+          },
+          {
+            id: 'C',
+            text: "「那我幫你在客廳買一台跑步機，這樣你就不用出門去健身房，邊追劇邊走。」",
+            isCorrect: false,
+            defenseDelta: +5,
+            motivationDelta: 0,
+            innerThought: "「客廳那麼擠，而且買了不走又會被你念浪費錢，壓力更大。」",
+            explanation: "<b>【花錢越俎代庖】</b><br>未經共識直接添購昂貴器材，往往轉化為無形的道德負擔與壓力。"
+          },
+          {
+            id: 'D',
+            text: "「運動哪有一開始就不花時間的？你想改變就必須付出代價，沒有藉口。」",
+            isCorrect: false,
+            defenseDelta: +15,
+            motivationDelta: -10,
+            innerThought: "「那就當我藉口多吧，我放棄行了吧。」",
+            explanation: "<b>【嚴厲說教】</b><br>非黑即白的激進立場，直接逼迫對方退回原本的沙發舒適圈。"
+          }
+        ]
+      },
+      {
+        id: 5,
+        title: "階段 5：擬定計畫 (Planning)",
+        dialogue: "「如果是晚餐吃飽後，一起走去巷口超商買瓶無糖綠茶再繞一圈回來，大概 10 分鐘，這我好像還可以試試看。」",
+        avatar: "😄",
+        status: "躍躍欲試、主動提議",
+        options: [
+          {
+            id: 'A',
+            text: "「才走 10 分鐘根本消耗不了多少卡路里，心跳沒到 130 都不算有效運動啦！」",
+            isCorrect: false,
+            defenseDelta: +20,
+            motivationDelta: -25,
+            innerThought: "「好不容易鼓起勇氣想動一下，被你潑冷水潑成這樣，那乾脆不要去了。」",
+            explanation: "<b>【澆熄行動雛形（致命打擊）】</b><br>用僵硬的科學指標否定對方的第一步，是扼殺動機最殘酷的方式。"
+          },
+          {
+            id: 'B',
+            text: "「這主意很棒耶，輕鬆又沒壓力！你覺得這週挑哪幾天吃飽後走走，對你來說最剛好？」",
+            isCorrect: true,
+            defenseDelta: -15,
+            motivationDelta: +25,
+            innerThought: "「太棒了！他很贊同我的想法，挑兩三天散步好像真的很愜意，今天就來走！」",
+            explanation: "<b>【肯定（Affirmation）＋ 合作共擬計畫（Collaboration）】</b><br>熱情肯定對方的自發提議，並用封閉具體化的提問協助把承諾落地，成功促成改變行動！"
+          },
+          {
+            id: 'C',
+            text: "「好！那你答應我，從今天開始每天都要去走，下雨天也得撐傘去，千萬不能偷懶！」",
+            isCorrect: false,
+            defenseDelta: +10,
+            motivationDelta: -5,
+            innerThought: "「每天？！連下雨都要去？這也太像坐牢了吧……」",
+            explanation: "<b>【過度綑綁承諾】</b><br>把自發性的樂趣瞬間升級為沉重的軍事紀律，容易引發抗拒。"
+          },
+          {
+            id: 'D',
+            text: "「那我馬上上網幫你買一雙專業健走鞋和計步手環，每天監督你有沒有達標。」",
+            isCorrect: false,
+            defenseDelta: +10,
+            motivationDelta: 0,
+            innerThought: "「幹嘛搞得像被監視器盯著一樣，壓力好大……」",
+            explanation: "<b>【警察式監督】</b><br>奪取了對方的控制權，將合作關係變質為主從監控關係。"
+          }
+        ]
+      }
+    ];
+
+    // 遊戲狀態變數
+    let currentStageIndex = 0;
+    let defenseScore = 85;
+    let motivationScore = 15;
+    let perfectChoicesCount = 0;
+
+    // DOM 元素引用
+    const screenIntro = document.getElementById('screen-intro');
+    const screenGame = document.getElementById('screen-game');
+    const screenEnding = document.getElementById('screen-ending');
+    const stageBadge = document.getElementById('stage-badge');
+
+    const btnStart = document.getElementById('btn-start');
+    const btnRestart = document.getElementById('btn-restart');
+    const btnCopyShare = document.getElementById('btn-copy-share');
+
+    const defenseValText = document.getElementById('defense-val-text');
+    const defenseBar = document.getElementById('defense-bar');
+    const motivationValText = document.getElementById('motivation-val-text');
+    const motivationBar = document.getElementById('motivation-bar');
+
+    const avatarBox = document.getElementById('avatar-box');
+    const statusTag = document.getElementById('status-tag');
+    const subStageLabel = document.getElementById('sub-stage-label');
+    const characterDialogue = document.getElementById('character-dialogue');
+    const optionsContainer = document.getElementById('options-container');
+
+    const feedbackModal = document.getElementById('feedback-modal');
+    const modalBadge = document.getElementById('modal-badge');
+    const modalResultTitle = document.getElementById('modal-result-title');
+    const modalScoreImpact = document.getElementById('modal-score-impact');
+    const modalInnerThought = document.getElementById('modal-inner-thought');
+    const modalCoachExplanation = document.getElementById('modal-coach-explanation');
+    const modalBtnRetry = document.getElementById('modal-btn-retry');
+    const modalBtnNext = document.getElementById('modal-btn-next');
+    const modalNextBtnText = document.getElementById('modal-next-btn-text');
+
+    const toast = document.getElementById('toast');
+
+    // 啟動遊戲
+    btnStart.addEventListener('click', () => {
+      screenIntro.classList.add('hidden');
+      screenGame.classList.remove('hidden');
+      screenGame.classList.add('flex');
+      stageBadge.classList.remove('hidden');
+      loadStage(0);
+    });
+
+    // 載入關卡
+    function loadStage(index) {
+      currentStageIndex = index;
+      const stage = stages[index];
+
+      // 更新進度標籤
+      stageBadge.textContent = `關卡 ${index + 1}/5`;
+      subStageLabel.textContent = stage.title;
+      characterDialogue.textContent = stage.dialogue;
+      avatarBox.textContent = stage.avatar;
+      statusTag.textContent = stage.status;
+
+      // 渲染選項按鈕
+      optionsContainer.innerHTML = '';
+      stage.options.forEach(option => {
+        const btn = document.createElement('button');
+        btn.className = `w-full text-left p-3.5 rounded-2xl border border-stone-200 bg-stone-50/70 hover:bg-amber-50/80 active:scale-[0.98] transition-all duration-150 flex items-start gap-2.5`;
+        btn.innerHTML = `
+          <span class="w-6 h-6 rounded-full bg-white border border-stone-300 text-stone-600 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+            ${option.id}
+          </span>
+          <span class="text-xs sm:text-sm font-medium text-stone-700 leading-snug">
+            ${option.text.replace(/^「|」$/g, '')}
+          </span>
+        `;
+        btn.addEventListener('click', () => handleOptionSelected(option));
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    // 處理選項點擊
+    function handleOptionSelected(option) {
+      // 依選項更新數值
+      defenseScore = Math.max(5, Math.min(100, defenseScore + option.defenseDelta));
+      motivationScore = Math.max(5, Math.min(100, motivationScore + option.motivationDelta));
+      updateScoreBars();
+
+      if (option.isCorrect) {
+        perfectChoicesCount++;
+        showFeedback(true, option);
+      } else {
+        showFeedback(false, option);
+      }
+    }
+
+    // 更新量表視覺
+    function updateScoreBars() {
+      defenseValText.textContent = `${defenseScore}%`;
+      defenseBar.style.width = `${defenseScore}%`;
+      if (defenseScore > 60) {
+        defenseBar.className = "h-full bg-red-400 rounded-full transition-all duration-500";
+      } else {
+        defenseBar.className = "h-full bg-amber-400 rounded-full transition-all duration-500";
+      }
+
+      motivationValText.textContent = `${motivationScore}%`;
+      motivationBar.style.width = `${motivationScore}%`;
+    }
+
+    // 顯示反饋彈窗
+    function showFeedback(isSuccess, option) {
+      feedbackModal.classList.remove('hidden');
+      feedbackModal.classList.add('flex');
+
+      if (isSuccess) {
+        modalBadge.className = "flex items-center gap-2 text-sm font-black text-emerald-600";
+        modalResultTitle.textContent = "回應精準！引發動機";
+        modalScoreImpact.className = "text-xs font-bold px-2 py-1 rounded bg-emerald-50 text-emerald-700 border border-emerald-200";
+        modalScoreImpact.textContent = `動機 +${option.motivationDelta}% ｜ 心防 ${option.defenseDelta}%`;
+        modalBtnRetry.classList.add('hidden');
+        modalBtnNext.className = "flex-1 py-3.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-sm font-bold rounded-xl shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-1.5";
+        
+        if (currentStageIndex === stages.length - 1) {
+          modalNextBtnText.textContent = "看結算結果";
+        } else {
+          modalNextBtnText.textContent = "進入下一關對話";
+        }
+      } else {
+        modalBadge.className = "flex items-center gap-2 text-sm font-black text-red-600";
+        modalResultTitle.textContent = "哎呀！踩中說教雷區";
+        modalScoreImpact.className = "text-xs font-bold px-2 py-1 rounded bg-red-50 text-red-700 border border-red-200";
+        modalScoreImpact.textContent = `心防 +${option.defenseDelta}% ｜ 動機 ${option.motivationDelta}%`;
+        modalBtnRetry.classList.remove('hidden');
+        modalBtnNext.className = "flex-1 py-3.5 bg-stone-700 hover:bg-stone-800 active:scale-95 text-white text-sm font-bold rounded-xl transition-all flex items-center justify-center gap-1.5";
+        modalNextBtnText.textContent = "理解了，繼續前進";
+      }
+
+      modalInnerThought.textContent = option.innerThought;
+      modalCoachExplanation.innerHTML = option.explanation;
+    }
+
+    // 彈窗「再試一次」按鈕
+    modalBtnRetry.addEventListener('click', () => {
+      feedbackModal.classList.add('hidden');
+      feedbackModal.classList.remove('flex');
+    });
+
+    // 彈窗「下一步」按鈕
+    modalBtnNext.addEventListener('click', () => {
+      feedbackModal.classList.add('hidden');
+      feedbackModal.classList.remove('flex');
+
+      if (currentStageIndex < stages.length - 1) {
+        loadStage(currentStageIndex + 1);
+      } else {
+        showEndingScreen();
+      }
+    });
+
+    // 結算畫面展示
+    function showEndingScreen() {
+      screenGame.classList.add('hidden');
+      screenGame.classList.remove('flex');
+      stageBadge.classList.add('hidden');
+      screenEnding.classList.remove('hidden');
+      screenEnding.classList.add('flex');
+
+      const endingTitle = document.getElementById('ending-title');
+      const endingDesc = document.getElementById('ending-desc');
+      const endingIcon = document.getElementById('ending-icon');
+      const endingDefense = document.getElementById('ending-defense');
+      const endingMotivation = document.getElementById('ending-motivation');
+
+      endingDefense.textContent = `${defenseScore}%`;
+      endingMotivation.textContent = `${motivationScore}%`;
+
+      if (perfectChoicesCount >= 4) {
+        endingIcon.textContent = "🏅";
+        endingTitle.textContent = "MI 宗師級引導家";
+        endingDesc.textContent = "太不可思議了！你具備高超的同理心與喚起技巧，完全不落入指責，讓家人主動說出改變的理由並邁出第一步！";
+      } else if (perfectChoicesCount >= 2) {
+        endingIcon.textContent = "🤝";
+        endingTitle.textContent = "心靈捕手引導師";
+        endingDesc.textContent = "表現很好！你成功接住了對方的疲累與矛盾，只要再克制一點點矯正反射，你的溝通影響力會無比強大。";
+      } else {
+        endingIcon.textContent = "👮";
+        endingTitle.textContent = "熱血嚴厲教官";
+        endingDesc.textContent = "你的出發點完全是出於愛與關心，但「好心講道理」常在無形中激起對方的防衛。多運用傾聽與肯定，會有意想不到的奇蹟！";
+      }
+    }
+
+    // 重新開始
+    btnRestart.addEventListener('click', () => {
+      defenseScore = 85;
+      motivationScore = 15;
+      perfectChoicesCount = 0;
+      updateScoreBars();
+      screenEnding.classList.add('hidden');
+      screenEnding.classList.remove('flex');
+      screenGame.classList.remove('hidden');
+      screenGame.classList.add('flex');
+      stageBadge.classList.remove('hidden');
+      loadStage(0);
+    });
+
+    // 複製分享訊息至剪貼簿 (適用於 LINE)
+    btnCopyShare.addEventListener('click', () => {
+      const title = document.getElementById('ending-title').textContent;
+      const shareText = `我在「動機式晤談（MI）實戰：勸家人動起來」獲得稱號：【${title}】！\n最終心防：${defenseScore}% ｜ 動機：${motivationScore}%\n原來不說教、學會傾聽，家人真的會自己想去運動！\n快來測測看你的溝通功力：${window.location.href}`;
+
+      // 使用相容性高的 copy 指令以支援嵌入式 Webview
+      const tempInput = document.createElement('textarea');
+      tempInput.value = shareText;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+
+      // 顯示 Toast 提示
+      toast.style.opacity = '1';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+      }, 2500);
+    });
+  </script>
+</body>
+</html>
